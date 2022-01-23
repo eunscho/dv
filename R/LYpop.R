@@ -13,7 +13,7 @@ LYpop <- function(trait = 3, method = 3, item = 3, trait_loading, method_loading
           }
         }
       } else { # method loadings
-        if (ceiling(i / (item * method)) == j - trait) {
+        if (ceiling(i / (item * trait)) == j - trait) {
           out[i, j] <- method_loading[i]
         }
       } # end of } else { # method loadings

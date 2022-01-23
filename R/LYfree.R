@@ -13,7 +13,7 @@ LYfree <- function(trait = 3, method = 3, item = 3) {
           }
         }
       } else { # method loadings
-        if (ceiling(i / (item * method)) == j - trait) {
+        if (ceiling(i / (item * trait)) == j - trait) {
           out[i, j] <- NA
         }
       } # end of } else { # method loadings
