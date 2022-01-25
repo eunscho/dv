@@ -25,9 +25,18 @@ PScon
 
 com <- composite(dat, t, m, k)
 
+
+com
 dat
 sum(dat[1, 1:2])
 
 r <- cor(com)
 r
 campbell(r, t, m, k)
+
+r
+diag(r[1,1])
+diag(r)[1] <- 2
+r
+
+campbell(dat, t, m, k)
