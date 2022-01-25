@@ -39,4 +39,9 @@ diag(r[1,1])
 diag(r)[1] <- 2
 r
 
-campbell(dat, t, m, k)
+cam <- campbell(dat, t, m, k)
+a <- dat[,1:3]
+library(reliacoef)
+mu4(cor(a))
+cor(a)
+cam
