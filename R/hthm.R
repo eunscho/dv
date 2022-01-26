@@ -1,6 +1,6 @@
 hthm <- function(hthm, mthm) {
   n <- nrow(hthm)
-  nviol <- ncomp <- 0
+  nviol <- ncomp <- 0 # nviol: number of violations, ncomp: number of comparisons
   for (i in 1:n) {
     for (j in 1:i) {
       if (!is.na(mthm[i, j])) {
