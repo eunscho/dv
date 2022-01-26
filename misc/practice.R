@@ -31,17 +31,12 @@ dat
 sum(dat[1, 1:2])
 
 r <- cor(com)
-r
-campbell(r, t, m, k)
-
-r
-diag(r[1,1])
-diag(r)[1] <- 2
-r
+cam
 
 cam <- campbell(dat, t, m, k)
-a <- dat[,1:3]
-library(reliacoef)
-mu4(cor(a))
-cor(a)
-cam
+hthm(cam$hthm, cam$mthm)
+hthm(cam$hthm, cam$htmm)
+cam$mtmm
+hthm(cam$htmm, cam$rel)
+library(semTools)
+?discriminantValidity
