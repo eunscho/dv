@@ -1,8 +1,9 @@
 main <- function(start = 1, end = 4) {
   source("misc/conditions.r") # conditions.r specify simulation conditions
-  N_SET <- 10
-  rep_sets <- 1:N_SET
-  rep_per_set <- 1:(1000/N_SET)
+  REP_PER_CONDITION <- 1000
+  SET_PER_CONDITION <- 10
+  rep_sets <- 1:SET_PER_CONDITION
+  rep_per_set <- 1:(REP_PER_CONDITION/SET_PER_CONDITION)
   
   for (condition_number in start:end) {
     for (rep_set in rep_sets) {
