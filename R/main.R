@@ -1,5 +1,9 @@
 main <- function(start = 1, end = 4) {
-  source("misc/conditions.r") # conditions.r specify simulation conditions
+  #source("misc/conditions.r") # conditions.r specify simulation conditions
+  n <- c(70, 600)
+  fcor <- c(.7, 1- 1e-10) # focal trait correlation
+  conditions <- tidyr::crossing(n, fcor)
+  colnames(conditions) <- c("n", "fcor")
   REP_PER_CONDITION <- 1000
   SET_PER_CONDITION <- 10
   rep_sets <- 1:SET_PER_CONDITION
@@ -14,8 +18,8 @@ main <- function(start = 1, end = 4) {
       if (!file.exists(filename)) {
         for (rep in reps_per_set) {
           cat("piolotsim: ", condition_number, "rep set: ", rep_set, "rep: ", rep)
-          data <- generate_data(condition_number, rep_set, rep)
-          temp <- analyze_data(condition_number, rep_set, rep, data)
+          data <- generate_dat (conditions, condition_number, rep_set, rep)
+          temp <- analyze_dat (conditions, condition_number, rep_set, rep, data)
           if (rep == 1) {
             out <- temp
           } else {
@@ -23,7 +27,7 @@ main <- function(start = 1, end = 4) {
           }
         } # end of for (rep in reps_per_set)
 
-        readr::write_csv(data.frame(out), file = filename)
+        readr::write_csv(out, file = filename)
         print(out)
         tictoc::toc()
       } # end of if (!file.exists(filename))
