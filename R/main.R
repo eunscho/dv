@@ -1,7 +1,7 @@
 main <- function(start = 1, end = 4) {
   #source("misc/conditions.r") # conditions.r specify simulation conditions
   n <- c(70, 600)
-  fcor <- c(.7, 1- 1e-10) # focal trait correlation
+  fcor <- c(.7, 1 - 1e-10) # focal trait correlation
   conditions <- tidyr::crossing(n, fcor)
   colnames(conditions) <- c("n", "fcor")
   REP_PER_CONDITION <- 1000
