@@ -1,6 +1,6 @@
-generate_data <- function(condition_number, rep_set, rep) {
+generate_dat <- function(conditions, condition_number, rep_set, rep) {
   library(simsem)
-  source("misc/conditions.r")
+  #source("misc/conditions.r")
   set.seed(10000 * condition_number + 100 * rep_set + rep)
   n <- as.integer(conditions[condition_number, 1])
   fcor <- as.double(conditions[condition_number, 2])
@@ -11,8 +11,8 @@ generate_data <- function(condition_number, rep_set, rep) {
   mloading <- rep(.5, t * m * k)
   LY <- bind(LYfree(t, m, k), LYpop(t, m, k, tloading, mloading))
   LY
-  tcor <- c(fcor, rep(.3, t * (t - 1) / 2 - 1))
-  mcor <- rep(.3, m * (m - 1) / 2)
+  tcor <- c(fcor, rep(.3, t * (t - 1) / 2 - 1)) # trait correlatons
+  mcor <- rep(.3, m * (m - 1) / 2) # method correlations
   PS <- binds(PSfree(t, m), PSpop(t, m, tcor = tcor, mcor))
   error.cor <- matrix(0, t * m * k, t * m * k)
   diag(error.cor) <- 1

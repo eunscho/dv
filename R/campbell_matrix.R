@@ -1,4 +1,4 @@
-campbell <- function(datamat, trait, method, item) {
+campbell_matrix <- function(datamat, trait, method, item) {
   r <- cor(composite(datamat, trait, method, item))
   n <- trait * method # number of rows or columns
   mthm <- hthm <- htmm <- rel <- matrix(NA, n, n)
@@ -31,3 +31,4 @@ campbell <- function(datamat, trait, method, item) {
   out <- list(mthm = mthm, hthm = hthm, htmm = htmm, rel = rel)
   return(out)
 }
+

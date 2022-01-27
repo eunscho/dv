@@ -3,7 +3,7 @@ main <- function(start = 1, end = 4) {
   REP_PER_CONDITION <- 1000
   SET_PER_CONDITION <- 10
   rep_sets <- 1:SET_PER_CONDITION
-  rep_per_set <- 1:(REP_PER_CONDITION/SET_PER_CONDITION)
+  reps_per_set <- 1:(REP_PER_CONDITION/SET_PER_CONDITION)
   
   for (condition_number in start:end) {
     for (rep_set in rep_sets) {
@@ -12,7 +12,7 @@ main <- function(start = 1, end = 4) {
       print(conditions[condition_number, ])
       filename <- paste0("piolotsim", condition_number, "-", rep_set, ".csv")
       if (!file.exists(filename)) {
-        for (rep in rep_per_set) {
+        for (rep in reps_per_set) {
           cat("piolotsim: ", condition_number, "rep set: ", rep_set, "rep: ", rep)
           data <- generate_data(condition_number, rep_set, rep)
           temp <- analyze_data(condition_number, rep_set, rep, data)
@@ -21,7 +21,7 @@ main <- function(start = 1, end = 4) {
           } else {
             out <- rbind(out, temp)
           }
-        } # end of for (rep in rep_per_set)
+        } # end of for (rep in reps_per_set)
 
         readr::write_csv(data.frame(out), file = filename)
         print(out)
