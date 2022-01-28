@@ -96,9 +96,11 @@ analyze_dat <- function(conditions, condition_number, rep_set, rep, data) {
   if (ctcm_converged & stcm_converged) {
     widaman_dif <- semTools::compareFit(fit_ctcm, fit_stcm, nested = TRUE)
     widaman_dif_p <- ifelse(widaman_dif@nested$`Pr(>Chisq)`[2] > .05, 1, 0)
+    widaman_dif_nfi <- ifelse(widaman_dif@fit.diff$nfi < .01, 1, 0)
     widaman_dif_tli <- ifelse(widaman_dif@fit.diff$tli < .01, 1, 0)
   } else {
     widaman_dif_p <- NA
+    widaman_dif_nfi <- NA
     widaman_dif_tli <- NA
   }
   ###############################################################################
@@ -121,7 +123,59 @@ analyze_dat <- function(conditions, condition_number, rep_set, rep, data) {
   } else {
     c_chisqdif <- NA
   }
-
+  ###############################################################################
+  # CICFA, Chi-square technique using item scores
+  ###############################################################################
+  model_i_unconstrained <- 'T1 =~ NA * t1m1_1 + t1m1_2 + t1m1_3 + t1m2_1 + t1m2_2 + t1m2_3 + t1m3_1 + t1m3_2 + t1m3_3
+                 T2 =~ NA * t1m1_1 + t2m1_2 + t2m1_3 + t2m2_1 + t2m2_2 + t2m2_3 + t2m3_1 + t2m3_2 + t2m3_3
+                 T3 =~ NA * t3m1_1 + t3m1_2 + t3m1_3 + t3m2_1 + t3m2_2 + t3m2_3 + t3m3_1 + t3m3_2 + t3m3_3
+                 M1 =~ NA * t1m1_1 + t1m1_2 + t1m1_3 + t2m1_1 + t2m1_2 + t2m1_3 + t3m1_1 + t3m1_2 + t3m1_3
+                 M2 =~ NA * t1m2_1 + t1m2_2 + t1m2_3 + t2m2_1 + t2m2_2 + t2m2_3 + t3m2_1 + t3m2_2 + t3m2_3
+                 M3 =~ NA * t1m3_1 + t1m3_2 + t1m3_3 + t2m3_1 + t2m3_2 + t2m3_3 + t3m3_1 + t3m3_2 + t3m3_3
+                 T1 ~~ 1 * T1; T2 ~~ 1 * T2; T3 ~~ 1 * T3
+                 M1 ~~ 1 * M1; M2 ~~ 1 * M2; M3 ~~ 1 * M3
+                 T1 ~~ 0 * M1; T1 ~~ 0 * M2; T1 ~~ 0 * M3
+                 T2 ~~ 0 * M1; T2 ~~ 0 * M2; T2 ~~ 0 * M3
+                 T3 ~~ 0 * M1; T3 ~~ 0 * M2; T3 ~~ 0 * M3
+                 T1 ~~ a12 * T2; T1 ~~ a13 * T3; T2 ~~ a23 * T3
+                 M1 ~~ b12 * M2; M1 ~~ b13 * M3; M2 ~~ b23 * M3
+                 a13 > -1; a13 < 1; a23 > -1; a23 < 1 
+                 b12 > -1; b12 < 1; b13 > -1; b13 < 1; b23 > -1; b23 < 1
+                 t1m1_1 ~~ c111 * t1m1_1; t1m1_2 ~~ c112 * t1m1_2; t1m1_3 ~~ c113 * t1m1_3;
+                 t1m2_1 ~~ c121 * t1m2_1; t1m2_2 ~~ c122 * t1m2_2; t1m2_3 ~~ c123 * t1m2_3;  
+                 t1m3_1 ~~ c131 * t1m3_1; t1m3_2 ~~ c132 * t1m3_2; t1m3_3 ~~ c133 * t1m3_3;
+                 t2m1_1 ~~ c211 * t2m1_1; t2m1_2 ~~ c212 * t2m1_2; t2m1_3 ~~ c213 * t2m1_3;    
+                 t2m2_1 ~~ c221 * t2m2_1; t2m2_2 ~~ c222 * t2m2_2; t2m2_3 ~~ c223 * t2m2_3;  
+                 t2m3_1 ~~ c231 * t2m3_1; t2m3_2 ~~ c232 * t2m3_2; t2m3_3 ~~ c233 * t2m3_3;
+                 t3m1_1 ~~ c311 * t3m1_1; t3m1_2 ~~ c312 * t3m1_2; t3m1_3 ~~ c313 * t3m1_3;  
+                 t3m2_1 ~~ c321 * t3m2_1; t3m2_2 ~~ c322 * t3m2_2; t3m2_3 ~~ c323 * t3m2_3;  
+                 t3m3_1 ~~ c331 * t3m3_1; t3m3_2 ~~ c332 * t3m3_2; t3m3_3 ~~ c333 * t3m3_3;
+                 c111 > 0; c112 > 0; c113 > 0;  c121 > 0; c122 > 0; c123 > 0; 
+                 c131 > 0; c132 > 0; c133 > 0;  c211 > 0; c212 > 0; c213 > 0; 
+                 c221 > 0; c222 > 0; c223 > 0;  c231 > 0; c232 > 0; c233 > 0;
+                 c311 > 0; c312 > 0; c313 > 0;  c321 > 0; c322 > 0; c323 > 0;  
+                 c331 > 0; c332 > 0; c333 > 0;'
+  model_i <- paste0(model_i_unconstrained, "a12 > -1; a12 < 1")
+  fit_i <- cfa(model = model_i, data = data) 
+  model_i_const <- paste0(model_i_unconstrained, "a12 == 1")
+  fit_i_const <- cfa(model_i_const, data)
+  if (lavInspect(fit_i, "converged")) {
+    i_point_estimate <- lavInspect(fit_i, what = "est")$psi[2,1]
+    i_se <- lavInspect(fit_i, what ="se")$psi[2,1]
+    i_upper <- i_point_estimate + 1.96 * i_se
+    i_cicfa <- ifelse(i_upper > cutoff, 1, 0)
+  } else {
+    i_cicfa <- NA
+  }
+  if( lavInspect(fit_i_const, what = "converged")) {
+    i_const_dif <- semTools::compareFit(fit_i, fit_i_const, nested = TRUE)
+    i_chisqdif <- ifelse(i_const_dif@nested$`Pr(>Chisq)`[2] > .05, 1, 0)
+  } else {
+    i_chisqdif <- NA
+  }
+  ###############################################################################
+  # Report output
+  ###############################################################################
   out <- data.frame(condition_number = condition_number,
               rep_set = rep_set,
               rep = rep,
@@ -140,9 +194,12 @@ analyze_dat <- function(conditions, condition_number, rep_set, rep, data) {
               stcm_converged <- stcm_converged,
               stcm_chi2 = stcm_chi2,
               widaman_dif_p = widaman_dif_p,
+              widaman_dif_nfi = widaman_dif_nfi,
               widaman_dif_tli = widaman_dif_tli,
               c_cicfa = c_cicfa,
-              c_chisqdif = c_chisqdif
+              c_chisqdif = c_chisqdif,
+              i_cicfa = i_cicfa,
+              i_chisqdif = i_chisqdif
               )
   return(out)
 }

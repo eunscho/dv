@@ -7,7 +7,7 @@ campbell_matrix <- function(datamat, trait, method, item) {
     tnumi <- mydiv(i, trait)
     mnumi <- ceiling(i / trait)
     name[i] <- paste0("t", tnumi, "m", mnumi)
-    diag(rel)[i] <- reliacoef::mu4(cor(datamat[((i - 1) * item + 1):(i * item )]))
+    diag(rel)[i] <- reliacoef::mu4(cor(datamat[((i - 1) * item + 1):(i * item )]), print = FALSE)
     for (j in 1:i) {
       if (i > j | i < j) { # nondiagonal
         mnumj <- ceiling(j / trait)

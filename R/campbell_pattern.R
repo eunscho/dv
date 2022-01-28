@@ -1,4 +1,5 @@
 campbell_pattern <- function(hthm, htmm) {
+  TOLERANCE <- 1.25
   t <- 3
   m <- 3
   # number of different proportions: t * (t - 1) / 2
@@ -33,7 +34,7 @@ campbell_pattern <- function(hthm, htmm) {
   viol <- 0
   for (i in nrow(ratios)) {
     for (j in ncol(ratios)) {
-      if (ratios[i, j] > 2 * mean(ratios[, j]) | ratios[i, j] < .5 * mean(ratios[, j])) {
+      if (ratios[i, j] > TOLERANCE * mean(ratios[, j]) | ratios[i, j] < 1 / TOLERANCE * mean(ratios[, j])) {
         viol <- 1
       }
     }
